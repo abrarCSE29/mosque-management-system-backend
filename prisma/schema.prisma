@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// 1. Define the 5 Roles
+enum Role {
+  SUPERUSER
+  EXECUTIVE
+  FINANCE_EXECUTIVE
+  DONOR
+  MEMBER
+}
+
+
+enum PaymentMethod {
+  CASH
+  BKASH
+  BANK
+  CARD
+}
+// 2. User Model
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String   // Hashed password
+  role      Role     @default(MEMBER)
+  mobile    String   @unique
+  
+  // Relations
+  payments  Payment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 3. Payment/Donation Model (For Donors and Finance Executives)
+model Payment {
+  id          String   @id @default(uuid())
+  amount      Float
+  description String?
+  isVerified  Boolean  @default(false) // Finance Execs will update this
+  method      PaymentMethod @default(CASH)
+  
+  // Relations
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
