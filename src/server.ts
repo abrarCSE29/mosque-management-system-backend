@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import router from './routes/auth.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -20,6 +21,10 @@ app.get('/api/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'success', message: 'Mosque Management System API is running!' });
 });
 
+// Routes
+app.use('/api/auth', router);
+
+// Basic Health Check Route ...
 // Start Server
 const PORT = process.env.PORT || 5000;
 
