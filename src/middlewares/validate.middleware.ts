@@ -8,7 +8,7 @@ export const validate = (schema: ZodObject) => {
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-         res.status(400).json({ status: 'error', errors: error.issues });
+         res.status(400).json({ status: 'error', errors: error.format() });
          return;
       }
       next(error);
